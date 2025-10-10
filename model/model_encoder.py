@@ -188,29 +188,51 @@ class AttentiveEncoder(nn.Module):
 
     def forward(self, img1, img2):
         batch, c, h, w = img1.shape
-        pos_h = torch.arange(h).cuda()
-        pos_w = torch.arange(w).cuda()
-        embed_h = self.w_embedding(pos_h)
-        embed_w = self.h_embedding(pos_w)
-        pos_embedding = torch.cat([embed_w.unsqueeze(0).repeat(h, 1, 1),
-                                       embed_h.unsqueeze(1).repeat(1, w, 1)], 
-                                       dim = -1)                            
-        pos_embedding = pos_embedding.permute(2,0,1).unsqueeze(0).repeat(batch, 1, 1, 1)
+
+        # use o mesmo device e dtype dos tensores de entrada (CPU aqui)
+        device = img1.device
+        dtype = img1.dtype
+
+        # cria índices no device correto (sem .cuda())
+        pos_h = torch.arange(h, device=device)
+        pos_w = torch.arange(w, device=device)
+
+        # embeddings posicionais
+        embed_h = self.w_embedding(pos_h)  # (h, c/2)
+        embed_w = self.h_embedding(pos_w)  # (w, c/2)
+
+        pos_embedding = torch.cat(
+            [
+                embed_w.unsqueeze(0).repeat(h, 1, 1),  # (h, w, c/2)
+                embed_h.unsqueeze(1).repeat(1, w, 1),  # (h, w, c/2)
+            ],
+            dim=-1,
+        )  # (h, w, c)
+
+        # reordena para (b, c, h, w) e garante dtype/device
+        pos_embedding = (
+            pos_embedding.permute(2, 0, 1)  # (c, h, w)
+            .unsqueeze(0)                   # (1, c, h, w)
+            .repeat(batch, 1, 1, 1)         # (b, c, h, w)
+            .to(device=device, dtype=dtype)
+        )
+
+        # adiciona posição e segue igual
         img1 = img1 + pos_embedding
         img2 = img2 + pos_embedding
-        img1 = img1.view(batch, c, -1).transpose(-1, 1)#batch, hw, c
+        img1 = img1.view(batch, c, -1).transpose(-1, 1)  # (b, hw, c)
         img2 = img2.view(batch, c, -1).transpose(-1, 1)
         img_sa1, img_sa2 = img1, img2
 
-        for (l, m) in self.selftrans:           
+        for (l, m) in self.selftrans:
             img_sa1 = l(img_sa1, img_sa1, img_sa1) + img_sa1
             img_sa2 = l(img_sa2, img_sa2, img_sa2) + img_sa2
-            img = torch.cat([img_sa1, img_sa2], dim = -1)
+            img = torch.cat([img_sa1, img_sa2], dim=-1)
             img = m(img, img, img)
-            img_sa1 = img[:,:,:c] + img1
-            img_sa2 = img[:,:,c:] + img2
+            img_sa1 = img[:, :, :c] + img1
+            img_sa2 = img[:, :, c:] + img2
 
-        img1 = img_sa1.reshape(batch, h, w, c).transpose(-1, 1)
+        img1 = img_sa1.reshape(batch, h, w, c).transpose(-1, 1)  # (b, c, h, w)
         img2 = img_sa2.reshape(batch, h, w, c).transpose(-1, 1)
 
         return img1, img2

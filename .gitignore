@@ -1,0 +1,19 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Dados e saídas pesadas
+data/
+datasets/
+models_checkpoint/
+runs/
+outputs/
+logs/
+
+# SO/IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
