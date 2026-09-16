@@ -1,114 +1,42 @@
 \section{Introdução}
 \label{introducao}
 
-Neste \textit{template} serão dados exemplos de utilização de alguns comandos tipicamente usados na escrita de um artigo. Para mais informações sobre comandos e funcionalidades do \LaTeX~ consulte \url{http://en.wikibooks.org/wiki/LaTeX}. \textbf{\underline{Para usar este \textit{template}}:}
+A análise de imagens de sensoriamento remoto adquiridas antes e depois de um desastre pode contribuir para a caracterização das alterações observáveis na área afetada. Nesse contexto, a comparação temporal permite investigar mudanças em elementos da paisagem, como edificações e cobertura do solo. A disponibilidade de imagens anteriores e posteriores aos eventos e de anotações de danos, exemplificada pelo conjunto xBD, evidencia o interesse em desenvolver métodos computacionais para apoiar esse tipo de análise \citep{gupta2019xbd}. Neste trabalho, esse apoio é entendido como uma tarefa de descrição visual, sem substituir avaliações especializadas ou estabelecer, por si só, a causa das alterações identificadas.
 
-\begin{itemize}
-    \item Recomenda-se \url{www.overleaf.com} para sua edição;
+A detecção de mudanças e a descrição textual dessas mudanças são tarefas relacionadas, mas produzem informações distintas. Enquanto a primeira pode indicar as regiões que sofreram alterações, a segunda busca expressar em linguagem natural o que mudou entre duas observações. Assim, além de localizar diferenças, torna-se necessário reconhecer os elementos envolvidos e relacioná-los temporalmente. No sensoriamento remoto, essa formulação é investigada como \textit{remote sensing image change captioning}, que associa pares de imagens a sentenças descritivas das mudanças na cobertura do solo \citep{liu2022}.
 
-    \item Faça o upload do arquivo .zip do \textit{template} na opção \textcolor{blue}{New Project > Upload Project}; 
-    \item Configure o idioma do corretor ortográfico clicando em \textcolor{blue}{Menu > Spell check > Portuguese (Brazilian)};
+Essa tarefa se relaciona à geração automática de legendas para uma única imagem, conhecida como \textit{image captioning}. Nesse problema, a representação visual é utilizada para produzir uma sentença que descreva o conteúdo da cena, aproximando visão computacional e processamento de linguagem natural \citep{vinyals2015}. Em \textit{change captioning}, o foco se desloca do conteúdo isolado para a diferença semântica entre duas imagens. Tal distinção exige separar mudanças relevantes de variações que não correspondem à alteração de interesse, como diferenças de ponto de vista \citep{park2019}.
 
-    \item Altere o texto como desejar (apenas os itens descritos na Tabela \ref{tab-ListaAlteracoes}), aproveite as estruturas de figuras, algoritmos e fórmulas dadas como exemplo; e
+Ao considerar imagens bitemporais de sensoriamento remoto, essa separação também precisa lidar com fatores como iluminação, sazonalidade e complexidade da cobertura do solo \citep{chang2023}. Uma legenda coerente deve, portanto, representar uma mudança sustentada pelo par de imagens, e não apenas reproduzir uma descrição plausível para uma das cenas. Para o recorte deste trabalho, também será importante verificar se a sentença preserva a ordem entre a observação anterior e a posterior e se evita atribuir ao desastre informações que não estejam visualmente sustentadas.
 
-    \item Procure manter o documento sem \textcolor{red}{\textit{\textbf{Errors}}} ou \textcolor{orange}{\textit{\textbf{Warnings}}}.
-\end{itemize}
+Entre as abordagens voltadas a esse problema, o Chg2Cap, de \citet{chang2023}, combina extração de características por uma rede convolucional siamesa, processamento atento das representações visuais e geração de legendas baseada em Transformer. A arquitetura Transformer utiliza mecanismos de atenção para modelar relações entre elementos de uma sequência \citep{vaswani2017}. Neste trabalho, o Chg2Cap será adotado como arquitetura de referência, constituindo o ponto de partida para a reprodução experimental e para adaptações incrementais ao domínio de desastres naturais.
 
-\subsection{Sobre Título, Resumo e Palavras-chave}
+\subsection{Problema de pesquisa e justificativa}
 
-Consulte o livro ``Metodologia Científica para Ciência da Computação'' de \cite{wazlawick2020} sobre a escrita de artigo. O \textcolor{blue}{\textbf{Título}} precisa ser curto e abrangente, deve-se destacar o problema (negócio), nem tanto a tecnologia. Em alguns casos citar a tecnologia pode ser importante, por isso combine com seu orientador o título mais adequado. Exemplos:
+A adoção de uma arquitetura existente não assegura que seu desempenho se mantenha em outro domínio. Neste projeto, será necessário investigar tanto a adequação das representações aprendidas quanto a compatibilidade entre as imagens, as anotações disponíveis e as descrições que se pretende gerar. Por isso, a reprodução inicial em um conjunto de referência constitui uma etapa de controle do procedimento experimental, anterior à análise dos efeitos da adaptação.
 
-\noindent
-\begin{quoting}[rightmargin=0cm,leftmargin=0.8cm]
-\begin{singlespace}
-{\normalsize{
-\textcolor{red}{\textbf{Ruim:}} ``Desenvolvimento de uma IHM em C\# para uma máquina de medição.'' (\textit{porquê destacar a tecnologia C\#? Evitar siglas no título, ex. IHM. Qual é o contexto do problema?)}.\\
+Outro ponto central é a disponibilidade de legendas de referência. Anotações destinadas a localizar edificações ou classificar danos não equivalem, automaticamente, a sentenças que descrevam mudanças. O xBD, por exemplo, fornece imagens anteriores e posteriores aos eventos, polígonos de edificações e categorias de dano \citep{gupta2019xbd}. Sua menção aqui contextualiza o problema de dados e não representa uma escolha definitiva para os experimentos. A seleção do conjunto de desastres e a estratégia de obtenção ou adequação das legendas ainda integram o planejamento metodológico.
 
-\vspace{-0.1cm}
-\noindent
-\textcolor{Chartreuse4}{\textbf{Bom:}} ``Desenvolvimento de Interface Homem-Máquina para equipamentos de inspeção: Estudo de caso em uma fábrica de autopeças.''}}
-\end{singlespace}
-\end{quoting}
+Diante disso, formula-se a seguinte questão de pesquisa: \textit{em que medida uma abordagem baseada no Chg2Cap consegue descrever mudanças observáveis em imagens bitemporais de sensoriamento remoto de cenários de desastres naturais, e quais limitações se manifestam nessa adaptação?} A investigação se justifica pela possibilidade de avaliar a descrição textual como uma forma complementar de apresentar as alterações visuais, examinando seus limites sem pressupor utilidade operacional ou superioridade em relação a outras abordagens.
 
-Leia ``4 dicas importantes para escrever o título de um artigo científico'' em \url{www.enago.com.br/academy/write-irresistible-research-paper-title/}.
+\subsection{Objetivos}
 
-Um artigo é tipicamente composto de: Resumo, Introdução (\textit{Porque o trabalho foi feito?}), Revisão Bibliográfica (\textit{Quais são os conceitos e outros trabalhos que abordaram o mesmo tema?}), Materiais e Métodos ou Desenvolvimento (\textit{Como foi feito?}), Resultados (\textit{O que foi observado?}), Conclusões e Trabalhos Futuros (\textit{O que se pode concluir e quais são as possibilidades de desenvolvimento futuro?}), Referências. Essa organização é apenas uma sugestão podendo ser alterada se desejado.
+O objetivo geral é adaptar e avaliar uma abordagem baseada no Chg2Cap para gerar descrições textuais das mudanças observadas em imagens bitemporais de sensoriamento remoto em cenários de desastres naturais.
 
-Em especial o \textcolor{blue}{\textbf{Resumo}} é um dos elementos mais importantes pois é o momento de convencer o leitor a continuar a leitura do documento. O Resumo é geralmente um dos últimos elementos textuais a ser escrito pois sintetiza todo o trabalho. É constituído de um único parágrafo sem tabulação, devendo-se evitar incluir \textit{links} e citações bibliográficas. O ideal é que o Resumo inclua: (\textit{i}) Contextualização a partir de uma explicação clara do problema real abordado no trabalho e a motivação para solucioná-lo; (\textit{ii}) Um esboço da solução adotada para resolver o problema; (\textit{iii}) Como verificou se a solução proposta resolveu o problema (experimentos); (\textit{iv}) Uma síntese dos resultados ou percepções obtidas.
+Para alcançar esse objetivo, estabelecem-se os seguintes objetivos específicos:
 
-A \textcolor{blue}{alteração do Título e das Palavras-chave} é feita através do arquivo \textcolor{blue}{\textit{``configuracao.tex''}}. Para \textcolor{magenta}{alteração do Resumo} edite o arquivo ``\textcolor{magenta}{\textit{elemtextuais > resumo.tex''}}. A referência a seguir pode auxiliar na escrita do Resumo e definição das Palavras-chave: ``Como escrever o resumo de um artigo para publicação'' \url{www.scielo.br/j/ape/a/rCZ5yZ8gwJrJD3cGKFq3SLx/?lang=pt}
+\begin{enumerate}
+    \item Reproduzir e documentar o funcionamento do Chg2Cap no conjunto de referência LEVIR-CC, registrando as configurações, os procedimentos de avaliação e as legendas geradas.
+    \item Selecionar e preparar dados de cenários de desastres naturais, considerando o pareamento temporal das imagens e a disponibilidade ou viabilidade de obtenção de legendas de referência.
+    \item Adequar o processamento dos dados e o procedimento experimental ao domínio selecionado, preservando inicialmente a arquitetura de referência.
+    \item Executar experimentos de treinamento e avaliação, com registro das configurações e separação dos dados utilizados nas diferentes etapas.
+    \item Analisar os resultados por meio de métricas de geração de legendas e de inspeção qualitativa, identificando erros de conteúdo, mudanças inexistentes, inversões temporais e omissões relevantes.
+\end{enumerate}
 
-\subsection{Dicas para Introdução}
-\label{dicasIntroducao}
+\subsection{Delimitação e contribuição esperada}
 
-Especialistas indicam que o ideal é iniciar a escrita (ex. capítulo, seção) apenas quando já se tem uma noção de como ela deverá terminar. Como dica, inicialmente levante os tópicos que pretende descrever no texto em forma de frases, organize-as em uma sequência lógica que facilite o entendimento. Em seguida desenvolva as frases, faça sentenças curtas mas não seja simplista. Evite parágrafos muito curtos (ex. 3, 4 linhas), mas escreva frases curtas. Uma dica para ajudar na escrita é utilizar recursos de reconhecimento de voz (ex. MS Word) que fazem a transcrição do texto ditado, geralmente sendo necessárias poucas correções. Em caso de dúvidas quanto a escrita:
+O escopo compreende pares de imagens da mesma área em dois momentos e a geração de uma descrição das mudanças observáveis entre eles. O LEVIR-CC, apresentado por \citet{liu2022}, será utilizado como referência inicial, sem que seus resultados sejam interpretados como evidência de desempenho em desastres naturais. A contribuição esperada é de natureza experimental e aplicada: documentar a reprodução, examinar a adaptação de dados e analisar capacidades e limitações do Chg2Cap no domínio selecionado. Não se pressupõe a criação de uma nova arquitetura, nem se antecipam resultados ainda não obtidos.
 
-\begin{itemize}
-    \item ``Guia de Primeiros Socorros para Textos Acadêmicos e Técnicos: seja você o primeiro revisor do seu texto'' disponível em \url{www.researchgate.net/publication/338778600_Guia_de_Primeiros_Socorros_para_Textos_Academicos_e_Tecnicos_seja_voce_o_primeiro_revisor_do_seu_texto}
-    
-    \item ``Como escrever um artigo científico passo-a-passo'' disponível em \url{https://posgraduando.com/como-escrever-um-artigo-cientifico/}.
-\end{itemize}
+\subsection{Organização do trabalho}
 
-Para confecção do artigo a sugestão é iniciar a escrita pela Introdução, pois diversos elementos já foram mencionados no ``Formulário de Registro de Projeto de TCC'' como objetivos, justificativa, resultados esperados etc. Este capítulo visa apresentar de forma mais detalhada o tema e o problema de pesquisa que o trabalho pretende solucionar. Consulte o vídeo do prof. André Fontenelle (\url{andrefontenelle.com.br/como-fazer-uma-introducao-de-tcc/#Introducao}) que destaca a importância da Introdução, além de dicas. Sugestão de parágrafos para Introdução \citep{fontenelle2021}:
-
-\begin{itemize}[leftmargin=1cm]
-    \renewcommand{\labelitemi}{\tiny$\blacksquare$}
-
-    \item 1º e 2º parágrafo: apresentação do tema dentro de um contexto;
-
-    \item  3º parágrafo: delimitação do tema, apresentado através do problema de pesquisa do TCC;
-
-    \item 4º parágrafo: apresente possíveis respostas para o problema de pesquisa (hipóteses);
-
-    \item 5º parágrafo: em poucas palavras, fale sobre o objetivo geral do trabalho e também dos específicos;
-
-    \item 6º parágrafo: apresente a justificativa ou relevância do seu trabalho acadêmico, identificando a importância dele para a sociedade ou comunidade científica;
-
-    \item 7º parágrafo: descreva, em poucas palavras, qual metodologia foi utilizada. Você deve especificar o procedimento de forma concisa;
-
-    \item 8º parágrafo: apresente a estrutura do trabalho, ou seja, como ele está dividido em seções. Cite resumidamente sobre o que se trata cada seção.
-\end{itemize}
-
-A organização acima é apenas uma sugestão, sendo que alguns autores utilizam seções específicas para descrever determinados itens da Introdução (ex. Objetivos). Para mais informações leia ``Introdução de TCC: O que é, como fazer e modelos prontos para usar'' disponível em \url{www.tuacarreira.com/introducao-de-tcc}. \newline
-
-\noindent
-\begin{center}
-    \textbf{ALTERAÇÕES NO TEMPLATE}
-\end{center}
-\vspace{0.2cm}
-
-A Tabela \ref{tab-ListaAlteracoes} visa facilitar a localização dos arquivos do projeto para alteração dos elementos do artigo. Como exemplo, caso deseje alterar a estrutura de seções ou o nome do arquivo de uma seção, é necessário fazer a devida adequação em \textcolor{blue}{main.tex} (linhas 29{--}34). 
-
-\begin{table}[hbt!]
-\caption{Local dos arquivos para alterações de elementos textuais.}
-\label{tab-ListaAlteracoes}
-\resizebox{\columnwidth}{!}{
-\begin{tabular}{|c|c|c|}
-\hline
-\textbf{PASTA} & \textbf{ARQUIVO} & \textbf{ELEMENTO TEXTUAL} \\ \hline
-\multirow{6}{*}{raiz} & \multirow{2}{*}{main.tex} & Curso (cco / sin) \\ \cline{3-3} 
- &  & \begin{tabular}[c]{@{}c@{}} Inclusão ou alteração de arquivos na compilação \\ do documento (ex. Elementos Textuais) \end{tabular} \\ \cline{2-3} 
- & referencias.bib & Referências \\ \cline{2-3} 
- & \multirow{3}{*}{configuracao.tex} & Dados do Autor e Orientadores \\ \cline{3-3} 
- &  & Título, Ano, Local, Data da Defesa\\ \cline{3-3} 
- &  & Folha de Aprovação, Palavras-chave e Keywords \\ \hline
-\multirow{2}{*}{elemtextuais} & resumo.tex & Resumo \\ \cline{2-3}
- & nº-nome\_secao.tex & Seções (conteúdo) \\ \hline
-figs & -- & Figuras \\ \hline
-\end{tabular}}
-\end{table}
-
-\noindent
-\textcolor{red}{\textbf{ITENS DE ATENÇÃO E COMANDOS ÚTEIS:}}
-%\vspace{-0.2cm}
-\begin{itemize}
-    \item Exclua as figuras da pasta \textcolor{blue}{\textit{figs}} e referências bibliográficas do arquivo \textcolor{blue}{\textit{referencias.bib}} usadas como exemplo. Na versão final deixe  apenas o conteúdo do seu trabalho;
-    
-    \item Utilize \textcolor{blue}{\texttt{$\backslash$cite\{\}}} para citação \cite{fontenelle2021} ou \textcolor{blue}{\texttt{$\backslash$citep\{\}}} para \citep{fontenelle2021};
-    
-    \item Toda figura, tabela ou algoritmo inseridos no documento devem ser devidamente explicados no texto; e
-
-    \item Formate no \textit{itálico} todas as palavras em inglês;
-    
-    \item Nome de seções, figuras, tabelas etc são considerados próprios, por isso iniciam com maiúsculo (ex. Seção 3; Figura 2.1 etc). Use \textcolor{blue}{\texttt{$\backslash$ref\{\}}} para chamá-los no texto.
-\end{itemize}
+O texto está organizado em cinco seções. Após esta introdução, a Seção~\ref{referencial} reúne os fundamentos teóricos. A Seção~\ref{desenvolvimento} será dedicada aos dados e aos procedimentos experimentais. A Seção~\ref{resultados} apresentará os resultados e sua análise, e a Seção~\ref{conclusoes} reunirá as conclusões, limitações e possibilidades de continuidade.
