@@ -1,0 +1,14 @@
+{
+  "prepared": "data/RSCC/prepared/ebd-full-v1",
+  "image_root": "data/RSCC/full/images",
+  "training_python": "venv_rocm/bin/python",
+  "meteor_python": ".venv/rscc-metrics/bin/python",
+  "semantic_python": ".venv/rscc-semantic-gpu/bin/python",
+  "st5_model": ".venv/rscc-semantic/models/sentence-t5-xxl",
+  "bert_model": ".venv/rscc-semantic/models/roberta-large",
+  "epochs": 30,
+  "patience": 6,
+  "batch_size": 1,
+  "seed": 7,
+  "generation_limit": 551
+}

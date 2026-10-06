@@ -1,0 +1,10 @@
+# Separate environment: transformers differs intentionally from Qwen.
+numpy==1.26.4
+Pillow==12.3.0
+transformers==4.46.3
+sentence-transformers==3.3.1
+bert-score==0.3.13
+huggingface-hub==0.36.2
+tokenizers==0.20.3
+safetensors==0.8.0
+sentencepiece==0.2.2
