@@ -1,0 +1,4 @@
+# Fail rather than replace ROCm with PyPI CUDA/CPU Torch.
+torch==2.4.0+rocm6.1
+torchvision==0.19.0+rocm6.1
+torchaudio==2.4.0+rocm6.1
